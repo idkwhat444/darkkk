@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>리뷰 페이지</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background-color: #000;
+      color: #fff;
+      font-family: 'Noto Sans KR', sans-serif;
+    }
+    header {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      height: 60px;
+      background-color: #111;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      z-index: 1000;
+    }
+    header .logo {
+      font-size: 20px;
+      font-weight: bold;
+    }
+    nav a {
+      color: #fff;
+      text-decoration: none;
+      margin-left: 15px;
+      font-size: 14px;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 100px auto 50px;
+      padding: 0 20px;
+    }
+    h2 {
+      border-left: 5px solid #ffc107;
+      padding-left: 10px;
+      font-size: 20px;
+      margin-bottom: 20px;
+    }
+    .review-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 20px;
+    }
+    .review-card {
+      background-color: #1b1b1b;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+      cursor: pointer;
+    }
+    .review-card img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+    }
+    .review-content {
+      padding: 15px;
+      font-size: 14px;
+    }
+    .review-content strong {
+      display: block;
+      margin-bottom: 5px;
+    }
+    .chat-float {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      background-color: #ffcc00;
+      color: #000;
+      padding: 12px 18px;
+      border-radius: 30px;
+      text-decoration: none;
+      font-weight: bold;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+      transition: background-color 0.3s ease;
+    }
+    .chat-float:hover {
+      background-color: #e6b800;
+    }
+    footer {
+      background-color: #111;
+      padding: 20px;
+      text-align: center;
+      color: #aaa;
+      font-size: 14px;
+    }
+    .slider {
+      margin: 40px 0;
+      overflow: hidden;
+    }
+    .slider-track {
+      display: flex;
+      animation: scroll 20s linear infinite;
+    }
+    .slider-track img {
+      width: 300px;
+      height: 160px;
+      object-fit: cover;
+      margin-right: 20px;
+      border-radius: 10px;
+    }
+    @keyframes scroll {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-100%); }
+    }
+    .modal {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.9);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      padding: 20px;
+      z-index: 2000;
+    }
+    .modal img {
+      max-width: 90%;
+      max-height: 50vh;
+      border-radius: 10px;
+      margin-bottom: 20px;
+    }
+    .modal .info {
+      color: #fff;
+      text-align: center;
+    }
+    .modal .info p {
+      margin: 5px 0;
+    }
+    .modal .close {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      color: #fff;
+      font-size: 24px;
+      cursor: pointer;
+    }
+    @media (max-width: 768px) {
+      .review-card img {
+        height: auto;
+      }
+      .slider-track img {
+        width: 200px;
+        height: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">내 롤 대리 후기</div>
+    <nav>
+      <a href="#">홈</a>
+      <a href="#">서비스</a>
+      <a href="#">후기</a>
+      <a href="#">문의</a>
+    </nav>
+  </header>
+
+  <div class="container">
+    <h2>자동 슬라이드 후기</h2>
+    <div class="slider">
+      <div class="slider-track">
+        <img src="https://xn--2j1b137c.com/img/rvimg/1.jpg" alt="슬라이드1">
+        <img src="https://xn--2j1b137c.com/img/rvimg/2.jpg" alt="슬라이드2">
+        <img src="https://xn--2j1b137c.com/img/rvimg/3.jpg" alt="슬라이드3">
+        <img src="https://xn--2j1b137c.com/img/rvimg/4.jpg" alt="슬라이드4">
+        <img src="https://xn--2j1b137c.com/img/rvimg/5.jpg" alt="슬라이드5">
+      </div>
+    </div>
+
+    <h2>고객 포토 후기</h2>
+    <div class="review-grid" id="reviewGrid">
+      <!-- 카드들은 JS에서 자동 생성 -->
+    </div>
+  </div>
+
+  <a class="chat-float" href="https://open.kakao.com/o/yourchatlink" target="_blank">카카오톡 문의</a>
+
+  <footer>
+    ⓒ 2025 내 롤 대리 후기사이트. 모든 권리 보유.<br>
+    이메일: example@email.com | 카카오톡 문의: @yourchatid
+  </footer>
+
+  <div class="modal" id="modal">
+    <span class="close" onclick="closeModal()">×</span>
+    <img id="modalImg" src="" alt="후기 이미지">
+    <div class="info">
+      <p id="modalNick">닉네임: 익**</p>
+      <p id="modalStars">별점: ★★★★★</p>
+      <p id="modalText">후기 내용</p>
+    </div>
+  </div>
+
+  <script>
+    const reviews = [
+      {img: '6.jpg', nick: '익**1', stars: 5, text: '챌린저까지 안전하게 대리 완료! 감사합니다!'},
+      {img: '7.jpg', nick: '익**2', stars: 5, text: '마스터까지 일주일 컷! 실력 정말 좋네요.'},
+      {img: '8.jpg', nick: '익**3', stars: 4, text: '친절한 응대에 결과까지 완벽. 추천합니다.'},
+      {img: '9.jpg', nick: '익**4', stars: 5, text: '반복 사용 중! 너무 만족합니다.'},
+      {img: '10.jpg', nick: '익**5', stars: 4, text: '팀원 추천 받고 왔는데 정말 잘 하시네요.'},
+      {img: '11.jpg', nick: '익**6', stars: 5, text: '결과물 깔끔하고 빠르게 끝났습니다.'},
+      {img: '12.jpg', nick: '익**7', stars: 5, text: '가격도 합리적이고 믿을만해요.'},
+      {img: '13.jpg', nick: '익**8', stars: 4, text: '수고 많으셨어요. 다음에도 부탁드릴게요!'},
+      {img: '14.jpg', nick: '익**9', stars: 5, text: '여러 번 이용했는데 항상 만족!'},
+    ];
+    const grid = document.getElementById('reviewGrid');
+    const modal = document.getElementById('modal');
+    const modalImg = document.getElementById('modalImg');
+    const modalNick = document.getElementById('modalNick');
+    const modalStars = document.getElementById('modalStars');
+    const modalText = document.getElementById('modalText');
+
+    reviews.forEach((r, i) => {
+      const card = document.createElement('div');
+      card.className = 'review-card';
+      card.innerHTML = `
+        <img src="https://xn--2j1b137c.com/img/rvimg/${r.img}" alt="후기${i+1}">
+        <div class="review-content">
+          <strong>${r.nick}</strong>
+          ${r.text}
+        </div>
+      `;
+      card.onclick = () => {
+        modalImg.src = `https://xn--2j1b137c.com/img/rvimg/${r.img}`;
+        modalNick.textContent = `닉네임: ${r.nick}`;
+        modalStars.textContent = `별점: ${'★'.repeat(r.stars)}${'☆'.repeat(5 - r.stars)}`;
+        modalText.textContent = r.text;
+        modal.style.display = 'flex';
+      };
+      grid.appendChild(card);
+    });
+
+    function closeModal() {
+      modal.style.display = 'none';
+    }
+  </script>
+</body>
+</html>
